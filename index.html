@@ -1,0 +1,626 @@
+from pathlib import Path
+import urllib.request
+
+base = Path("/mnt/data/civic_website")
+base.mkdir(exist_ok=True)
+
+html = r'''<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Civic | Premium Sedan</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<style>
+    css
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: 'Inter', Arial, sans-serif;
+    color: #111;
+    background: #fff;
+    line-height: 1.6;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+/* ================= NAVBAR ================= */
+
+.navbar {
+    height: 78px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 6%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 10;
+    color: white;
+}
+
+.logo {
+    font-size: 28px;
+    font-weight: 800;
+    letter-spacing: 3px;
+}
+
+.logo span {
+    color: #e51d2a;
+}
+
+.navbar nav {
+    display: flex;
+    gap: 30px;
+}
+
+.navbar nav a {
+    font-size: 14px;
+    font-weight: 600;
+    transition: 0.3s;
+}
+
+.navbar nav a:hover {
+    color: #e51d2a;
+}
+
+.nav-btn {
+    border: 1px solid white;
+    padding: 10px 20px;
+    border-radius: 30px;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+/* ================= HERO ================= */
+
+.hero {
+    min-height: 780px;
+
+    background:
+        linear-gradient(
+            90deg,
+            rgba(0,0,0,0.85),
+            rgba(0,0,0,0.15)
+        ),
+        url("civic-hero.jpg") center/cover;
+
+    display: flex;
+    align-items: center;
+    padding: 120px 8%;
+    color: white;
+}
+
+.hero-content {
+    max-width: 600px;
+}
+
+.eyebrow {
+    color: #e51d2a;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 3px;
+    margin-bottom: 15px;
+}
+
+.hero h1 {
+    font-size: clamp(55px, 7vw, 92px);
+    line-height: 0.98;
+    letter-spacing: -4px;
+    margin-bottom: 25px;
+}
+
+.hero h1 span {
+    color: #e51d2a;
+}
+
+.hero-text {
+    font-size: 18px;
+    color: #ddd;
+    max-width: 520px;
+    margin-bottom: 35px;
+}
+
+/* ================= BUTTONS ================= */
+
+.hero-buttons {
+    display: flex;
+    gap: 15px;
+}
+
+.btn {
+    display: inline-block;
+    padding: 14px 27px;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: 700;
+    transition: 0.3s;
+}
+
+.primary {
+    background: #e51d2a;
+    color: white;
+}
+
+.primary:hover {
+    background: #b80f19;
+    transform: translateY(-3px);
+}
+
+.outline {
+    border: 1px solid white;
+    color: white;
+}
+
+.outline:hover {
+    background: white;
+    color: #111;
+}
+
+/* ================= INTRO ================= */
+
+.intro {
+    padding: 110px 8%;
+}
+
+.intro h2,
+.models h2,
+.gallery h2,
+.cta h2 {
+    font-size: clamp(38px, 5vw, 62px);
+    line-height: 1.08;
+    letter-spacing: -2px;
+}
+
+.intro h2 span,
+.models h2 span,
+.gallery h2 span,
+.cta h2 span {
+    color: #e51d2a;
+}
+
+.section-text {
+    max-width: 650px;
+    color: #666;
+    margin: 20px 0 55px;
+}
+
+/* ================= FEATURES ================= */
+
+.feature-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 25px;
+}
+
+.feature-grid article {
+    padding: 35px;
+    border: 1px solid #e5e5e5;
+    border-radius: 10px;
+    transition: 0.3s;
+}
+
+.feature-grid article:hover {
+    transform: translateY(-7px);
+    box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+}
+
+.icon {
+    font-size: 30px;
+    margin-bottom: 20px;
+}
+
+.feature-grid h3 {
+    font-size: 20px;
+    margin-bottom: 10px;
+}
+
+.feature-grid p {
+    color: #666;
+    font-size: 14px;
+}
+
+/* ================= MODELS ================= */
+
+.models {
+    background: #f5f5f5;
+    padding: 110px 8%;
+}
+
+.model-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 22px;
+    margin-top: 45px;
+}
+
+.model-card {
+    background: white;
+    border-radius: 10px;
+    overflow: hidden;
+    transition: 0.3s;
+}
+
+.model-card:hover {
+    transform: translateY(-7px);
+    box-shadow: 0 18px 40px rgba(0,0,0,0.12);
+}
+
+.model-card img {
+    width: 100%;
+    height: 240px;
+    object-fit: cover;
+}
+
+.model-card div {
+    padding: 25px;
+}
+
+.model-card h3 {
+    font-size: 23px;
+}
+
+.model-card p {
+    color: #666;
+    font-size: 14px;
+}
+
+.model-card strong {
+    display: block;
+    margin-top: 17px;
+    color: #e51d2a;
+}
+
+.featured {
+    outline: 2px solid #e51d2a;
+}
+
+.fineprint {
+    font-size: 11px;
+    color: #777;
+    margin-top: 20px;
+}
+
+/* ================= SPECIFICATIONS ================= */
+
+.specs {
+    background: #151515;
+    color: white;
+
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+
+    padding: 55px 8%;
+    text-align: center;
+}
+
+.specs div {
+    border-right: 1px solid #444;
+}
+
+.specs div:last-child {
+    border-right: none;
+}
+
+.specs strong {
+    display: block;
+    font-size: 36px;
+}
+
+.specs span {
+    font-size: 12px;
+    color: #aaa;
+}
+
+/* ================= GALLERY ================= */
+
+.gallery {
+    padding: 110px 8%;
+}
+
+.gallery-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: 15px;
+    margin-top: 40px;
+}
+
+.gallery-grid img {
+    width: 100%;
+    height: 300px;
+    object-fit: cover;
+    border-radius: 7px;
+}
+
+.gallery-grid img:first-child {
+    height: 615px;
+    grid-row: span 2;
+}
+
+/* ================= CTA ================= */
+
+.cta {
+    min-height: 540px;
+
+    padding: 100px 8%;
+
+    display: flex;
+    align-items: center;
+
+    color: white;
+
+    background:
+        linear-gradient(
+            90deg,
+            rgba(0,0,0,0.88),
+            rgba(0,0,0,0.25)
+        ),
+        url("civic-cta.jpg") center/cover;
+}
+
+.cta p:not(.eyebrow) {
+    max-width: 520px;
+    color: #ddd;
+    margin: 22px 0 30px;
+}
+
+/* ================= FOOTER ================= */
+
+footer {
+    background: #090909;
+    color: #aaa;
+
+    padding: 35px 8%;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 20px;
+
+    font-size: 12px;
+}
+
+.footer-logo {
+    font-size: 27px;
+    font-weight: 800;
+    color: white;
+    letter-spacing: 3px;
+}
+
+.footer-logo span {
+    color: #e51d2a;
+}
+
+footer a {
+    margin-left: 20px;
+}
+
+footer a:hover {
+    color: white;
+}
+
+/* ================= TABLET ================= */
+
+@media (max-width: 850px) {
+
+    .navbar nav {
+        display: none;
+    }
+
+    .hero {
+        min-height: 700px;
+    }
+
+    .feature-grid,
+    .model-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .specs {
+        grid-template-columns: 1fr 1fr;
+        gap: 30px;
+    }
+
+    .specs div:nth-child(2) {
+        border-right: none;
+    }
+
+    .gallery-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .gallery-grid img:first-child {
+        height: 300px;
+        grid-row: auto;
+    }
+
+    .gallery-grid img {
+        height: 220px;
+    }
+
+    footer {
+        flex-direction: column;
+        text-align: center;
+    }
+}
+
+/* ================= MOBILE ================= */
+
+@media (max-width: 520px) {
+
+    .navbar {
+        padding: 0 5%;
+    }
+
+    .nav-btn {
+        display: none;
+    }
+
+    .hero {
+        padding: 110px 6%;
+        min-height: 680px;
+    }
+
+    .hero h1 {
+        font-size: 55px;
+        letter-spacing: -2px;
+    }
+
+    .hero-text {
+        font-size: 15px;
+    }
+
+    .hero-buttons {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .intro,
+    .models,
+    .gallery {
+        padding: 75px 6%;
+    }
+
+    .intro h2,
+    .models h2,
+    .gallery h2,
+    .cta h2 {
+        font-size: 40px;
+    }
+
+    .gallery-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .gallery-grid img,
+    .gallery-grid img:first-child {
+        height: 250px;
+    }
+
+    .specs {
+        padding: 45px 5%;
+    }
+
+    .specs strong {
+        font-size: 28px;
+    }
+
+    .cta {
+        padding: 80px 6%;
+    }
+}
+
+
+</style>
+<body>
+
+<header class="navbar">
+  <a href="#" class="logo">CIVIC<span>.</span></a>
+  <nav>
+    <a href="#home">Home</a>
+    <a href="#features">Features</a>
+    <a href="#models">Models</a>
+    <a href="#gallery">Gallery</a>
+    <a href="#contact">Contact</a>
+  </nav>
+  <a href="#contact" class="nav-btn">Explore Civic</a>
+</header>
+
+<main>
+<section class="hero" id="home">
+  <div class="hero-content">
+    <p class="eyebrow">THE ALL-NEW CIVIC</p>
+    <h1>Drive Your<br><span>Ambition.</span></h1>
+    <p class="hero-text">A refined sedan designed around performance, technology and everyday confidence.</p>
+    <div class="hero-buttons">
+      <a href="#models" class="btn primary">View Models</a>
+      <a href="#features" class="btn outline">Discover More</a>
+    </div>
+  </div>
+</section>
+
+<section class="intro" id="features">
+  <p class="eyebrow">BUILT TO MOVE YOU</p>
+  <h2>Where style meets<br><span>smart performance.</span></h2>
+  <p class="section-text">Civic brings together athletic design, a confident drive and intuitive technology in one modern sedan.</p>
+
+  <div class="feature-grid">
+    <article><div class="icon">⚡</div><h3>Turbo Performance</h3><p>Responsive power and smooth acceleration for an engaging drive.</p></article>
+    <article><div class="icon">◉</div><h3>Smart Technology</h3><p>Connected features and intuitive controls keep every journey simple.</p></article>
+    <article><div class="icon">🛡</div><h3>Advanced Safety</h3><p>Driver-assistance technology designed to add confidence on the road.</p></article>
+  </div>
+</section>
+
+<section class="models" id="models">
+  <div class="section-heading">
+    <div><p class="eyebrow">CHOOSE YOUR CIVIC</p><h2>Find your <span>match.</span></h2></div>
+  </div>
+  <div class="model-grid">
+    <article class="model-card">
+      <img src="./white.jfif" alt="White Civic">
+      <div><h3>Civic Sedan</h3><p>Elegant design with everyday versatility.</p><strong>From $24,950*</strong></div>
+    </article>
+    <article class="model-card featured">
+      <img src="./red.jfif" alt="Red Civic">
+      <div><h3>Civic Sport</h3><p>A sportier look with an energetic attitude.</p><strong>From $27,450*</strong></div>
+    </article>
+    <article class="model-card">
+      <img src="./blue.jfif" alt="Blue Civic">
+      <div><h3>Civic Touring</h3><p>Premium comfort with advanced technology.</p><strong>From $31,450*</strong></div>
+    </article>
+  </div>
+  <p class="fineprint">*Example website pricing for design/demo purposes. Check your local Honda dealer for current pricing and specifications.</p>
+</section>
+
+<section class="specs">
+  <div><strong>158</strong><span>HP available</span></div>
+  <div><strong>31/40</strong><span>City / highway MPG*</span></div>
+  <div><strong>5</strong><span>Passenger seating</span></div>
+  <div><strong>CVT</strong><span>Automatic transmission</span></div>
+</section>
+
+<section class="gallery" id="gallery">
+  <p class="eyebrow">CIVIC IN FOCUS</p>
+  <h2>Designed to be <span>seen.</span></h2>
+  <div class="gallery-grid">
+    <img src="./front.jfif" alt="Civic front view">
+    <img src="./road.jfif" alt="Civic road view">
+    <img src="./side.jfif" alt="Civic side view">
+  </div>
+</section>
+
+<section class="cta" id="contact">
+  <div>
+    <p class="eyebrow">YOUR NEXT DRIVE STARTS HERE</p>
+    <h2>Ready to meet<br><span>your Civic?</span></h2>
+    <p>Explore the design, features and technology that make Civic a modern sedan for everyday life.</p>
+    <a href="mailto:info@example.com?subject=Civic%20Enquiry" class="btn primary">Request Information</a>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="footer-logo">CIVIC<span>.</span></div>
+  <p>© 2026 Civic Demo Website. Created for educational/static website use.</p>
+  <div><a href="#home">Home</a><a href="#models">Models</a><a href="#contact">Contact</a></div>
+</footer>
+
+</body>
+</html>
+
